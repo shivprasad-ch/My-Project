@@ -17,5 +17,5 @@ db.sqlite3
 
 # Django-specific
 staticfiles/
-media/# created by virtualenv automatically
-../.venv1/Lib
+settings.py../.venv1/Lib
+settings.py
