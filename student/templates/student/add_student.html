@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Student</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        function validateName() {
+            const nameInput = document.getElementById("id_name");
+            const errorDiv = document.getElementById("name_error");
+            const nameValue = nameInput.value;
+
+            const nameRegex = /^[A-Za-z ]+$/;
+
+            if (!nameRegex.test(nameValue)) {
+                errorDiv.textContent = "Name must contain only letters. exp- Raj Patil";
+            } else {
+                errorDiv.textContent = "";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h2>Add Student</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <label for="id_roll_number">Roll Number:</label>
+    {{ form.roll_number }}
+    {% if form.roll_number.errors %}
+        <div class="error">{{ form.roll_number.errors.0 }}</div>
+    {% endif %}
+    <br><br>
+
+    <label for="id_name">Name:</label>
+    {{ form.name }}
+    <div id="name_error" class="error"></div>
+    {% if form.name.errors %}
+        <div class="error">{{ form.name.errors.0 }}</div>
+    {% endif %}
+    <br><br>
+
+    <label for="id_age">Age:</label>
+    {{ form.age }}
+    {% if form.age.errors %}
+        <div class="error">{{ form.age.errors.0 }}</div>
+    {% endif %}
+    <br><br>
+
+    <label for="id_marks">Marks:</label>
+    {{ form.marks }}
+    {% if form.marks.errors %}
+        <div class="error">{{ form.marks.errors.0 }}</div>
+    {% endif %}
+    <br><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<!-- Attach event listener after page load -->
+<script>
+    document.getElementById("id_name").addEventListener("input", validateName);
+</script>
+
+</body>
+</html>
+

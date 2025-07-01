@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exit Application</title>
+</head>
+<body>
+    <h2>Do you really want to exit the application?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="confirm" value="yes">Yes, Exit</button>
+        <button type="submit" name="confirm" value="no">No, Stay</button>
+    </form>
+</body>
+</html>
