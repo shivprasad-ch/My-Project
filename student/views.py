@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Student
 from .forms import StudentForm
 
-# ✅ 1. Add student
+# 1. Add student
 def add_student(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -13,14 +13,12 @@ def add_student(request):
         form = StudentForm()
     return render(request, 'student/add_student.html', {'form': form})
 
-
-# ✅ 2. View all students
+# 2. View all students
 def view_students(request):
     students = Student.objects.all()
     return render(request, 'student/view_students.html', {'students': students})
 
-
-# ✅ 3. Search student by roll number
+# 3. Search student by roll number (HTML Form)
 def search_student(request):
     student = None
     error = None
@@ -32,22 +30,43 @@ def search_student(request):
             error = "Student not found."
     return render(request, 'student/search_student.html', {'student': student, 'error': error})
 
-
-# ✅ 4. Delete student (with confirmation)
+# 4. Delete student (with confirmation)
 def delete_student(request, roll_number):
     student = get_object_or_404(Student, roll_number=roll_number)
     if request.method == 'POST':
         student.delete()
         return redirect('view_students')
     return render(request, 'student/confirm_delete.html', {'student': student})
+
+# 5. Exit confirmation
 def exit_confirm(request):
     if request.method == 'POST':
         confirm = request.POST.get('confirm')
         if confirm == 'yes':
-            return render(request, 'student/goodbye.html')  # optional thank you page
+            return render(request, 'student/goodbye.html')
         else:
-            return redirect('view_students')  # user परत जाईल
+            return redirect('view_students')
     return render(request, 'student/exit_confirm.html')
+
+# 6. Home page
 def student_home(request):
     return render(request, 'student/home.html')
-# Create your views here.
+
+# --------------------------------------------
+# ✅ API Views (Django REST Framework)
+# --------------------------------------------
+from rest_framework import generics, filters
+from .serializers import StudentSerializer
+
+# ✅ List + Create API: /api/students/
+class StudentListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['roll_number', 'name']
+
+# ✅ Retrieve + Update + Delete: /api/students/<roll_number>/
+class StudentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    lookup_field = 'roll_number'

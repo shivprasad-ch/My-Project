@@ -9,10 +9,21 @@
     <h2 class="mb-4 text-center">🎓 Student Dashboard</h2>
 
     <div class="d-grid gap-3 col-6 mx-auto">
+        <!-- UI-Based Buttons -->
         <a href="{% url 'add_student' %}" class="btn btn-primary">➕ Add Student</a>
         <a href="{% url 'view_students' %}" class="btn btn-success">📄 View All Students</a>
         <a href="{% url 'search_student' %}" class="btn btn-info">🔍 Search Student</a>
         <a href="{% url 'exit_confirm' %}" class="btn btn-secondary">🚪 Exit Student</a>
+
+        <hr>
+
+        <!-- ✅ DRF API Access Button (All-in-One) -->
+        <a href="/api/students/" class="btn btn-outline-dark" target="_blank">
+            📡 API: Create / View / Search / Update / Delete
+        </a>
+
+        <!-- Admin Panel -->
+        <a href="/admin/" class="btn btn-outline-secondary" target="_blank">⚙️ Admin Panel</a>
     </div>
 </div>
 </body>

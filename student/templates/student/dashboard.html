@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student API Dashboard</title>
+    <style>
+        button { margin: 5px; padding: 10px; }
+        input { margin: 5px; padding: 5px; }
+        pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+    </style>
+    <script>
+        async function getStudents() {
+            const res = await fetch('/api/students/');
+            const data = await res.json();
+            document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function searchStudent() {
+            const roll = document.getElementById("search_roll").value;
+            const res = await fetch(`/api/students/?search=${roll}`);
+            const data = await res.json();
+            document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function deleteStudent() {
+            const roll = document.getElementById("delete_roll").value;
+            const res = await fetch(`/api/students/${roll}/`, { method: 'DELETE' });
+            document.getElementById("output").innerText = res.status === 204 ? "✅ Student deleted!" : "❌ Not found or failed!";
+        }
+    </script>
+</head>
+<body>
+    <h2>🎓 Student API Dashboard</h2>
+
+    <button onclick="getStudents()">👀 View All Students</button><br><br>
+
+    <input type="text" id="search_roll" placeholder="🔍 Roll Number to Search">
+    <button onclick="searchStudent()">Search</button><br><br>
+
+    <input type="text" id="delete_roll" placeholder="❌ Roll Number to Delete">
+    <button onclick="deleteStudent()">Delete</button><br><br>
+
+    <pre id="output">Output will appear here...</pre>
+</body>
+</html>
