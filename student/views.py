@@ -52,20 +52,29 @@ def exit_confirm(request):
 def student_home(request):
     return render(request, 'student/home.html')
 
-# --------------------------------------------
-# ✅ API Views (Django REST Framework)
-# --------------------------------------------
-from rest_framework import generics, filters
+# ------------------------------------------------------
+# ✅ API Views (Django REST Framework - with exact search)
+# ------------------------------------------------------
+from rest_framework import generics
 from .serializers import StudentSerializer
 
-# ✅ List + Create API: /api/students/
+# ✅ List + Create API: /api/students/?search=1
 class StudentListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['roll_number', 'name']
 
-# ✅ Retrieve + Update + Delete: /api/students/<roll_number>/
+    def get_queryset(self):
+        queryset = Student.objects.all()
+        search_value = self.request.GET.get('search', None)
+
+        if search_value is not None:
+            if search_value.isdigit():  # exact match for roll number
+                queryset = queryset.filter(roll_number=int(search_value))
+            else:  # partial match for name
+                queryset = queryset.filter(name__icontains=search_value)
+
+        return queryset
+
+# ✅ Retrieve + Update + Delete API: /api/students/<roll_number>/
 class StudentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
